@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Чайна Підписка - Автентичний китайський чай щомісяця</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #2d4a22 0%, #4a6741 50%, #1f3419 100%);
+            color: #2c3e28;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 134, 11, 0.05) 100%);
+            padding: 60px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(212,175,55,0.1)"/><circle cx="80" cy="40" r="1" fill="rgba(184,134,11,0.1)"/><circle cx="40" cy="80" r="1.5" fill="rgba(212,175,55,0.08)"/></svg>') repeat;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-100px) rotate(360deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 300;
+            color: #d4af37;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 50px;
+            margin: 40px auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .step {
+            margin-bottom: 50px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: slideUp 0.6s ease forwards;
+        }
+
+        .step:nth-child(1) { animation-delay: 0.2s; }
+        .step:nth-child(2) { animation-delay: 0.4s; }
+        .step:nth-child(3) { animation-delay: 0.6s; }
+        .step:nth-child(4) { animation-delay: 0.8s; }
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .step-title {
+            font-size: 1.8rem;
+            color: #2d4a22;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 400;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .option {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid transparent;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212,175,55,0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .option:hover::before {
+            left: 100%;
+        }
+
+        .option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.2);
+            border-color: #d4af37;
+        }
+
+        .option.selected {
+            background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+            color: white;
+            border-color: #d4af37;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .option-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .option-desc {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        .contact-form {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 15px;
+            padding: 30px;
+            border: 2px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2d4a22;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.9);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+        }
+
+        .summary {
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 4px solid #d4af37;
+        }
+
+        .summary h3 {
+            color: #2d4a22;
+            margin-bottom: 10px;
+        }
+
+        .summary-text {
+            color: #4a6741;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .form-container {
+                padding: 30px 20px;
+                margin: 20px auto;
+            }
+            
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .step-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        .tea-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>🍃 Чайна Подорож</h1>
+                <p class="subtitle">Автентичний китайський чай прямо до вашого дому щомісяця</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="form-container">
+            <form id="teaForm" action="https://script.google.com/macros/s/AKfycbxqqVjMxEv36_yynu9h8hnEs2pXieZ06r2lza5bDp7WH5A55TMAszuTvfuheh4Jf82F/exec" method="POST">
+                <input type="hidden" name="tea" id="hiddenTea">
+                <input type="hidden" name="effect" id="hiddenEffect">
+                <input type="hidden" name="volume" id="hiddenVolume">
+                <div class="step">
+                    <h2 class="step-title">🌿 Оберіть ваш улюблений тип чаю</h2>
+                    <div class="options-grid">
+                        <div class="option" data-type="tea" data-value="oolong">
+                            <span class="tea-icon">🌀</span>
+                            <div class="option-title">Улун</div>
+                            <div class="option-desc">Напівферментований чай з багатим смаком</div>
+                        </div>
+                        <div class="option" data-type="tea" data-value="puer">
+                            <span class="tea-icon">🏔️</span>
+                            <div class="option-title">Пуер</div>
+                            <div class="option-desc">Витриманий чай з глибоким землистим смаком</div>
+                        </div>
+                        <div class="option" data-type="tea" data-value="red">
+                            <span class="tea-icon">🔥</span>
+                            <div class="option-title">Червоний</div>
+                            <div class="option-desc">Повнотілий ферментований чай</div>
+                        </div>
+                        <div class="option" data-type="tea" data-value="white">
+                            <span class="tea-icon">☁️</span>
+                            <div class="option-title">Білий</div>
+                            <div class="option-desc">Ніжний делікатний чай з тонким ароматом</div>
+                        </div>
+                        <div class="option" data-type="tea" data-value="green">
+                            <span class="tea-icon">🌱</span>
+                            <div class="option-title">Зелений</div>
+                            <div class="option-desc">Свіжий неферментований чай</div>
+                        </div>
+                        <div class="option" data-type="tea" data-value="yellow">
+                            <span class="tea-icon">☀️</span>
+                            <div class="option-title">Жовтий</div>
+                            <div class="option-desc">Рідкісний чай з унікальним процесом обробки</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h2 class="step-title">✨ Який ефект ви шукаєте?</h2>
+                    <div class="options-grid">
+                        <div class="option" data-type="effect" data-value="energize">
+                            <span class="tea-icon">⚡</span>
+                            <div class="option-title">Бадьорить</div>
+                            <div class="option-desc">Додає енергії та активності</div>
+                        </div>
+                        <div class="option" data-type="effect" data-value="calm">
+                            <span class="tea-icon">🧘</span>
+                            <div class="option-title">Заспокоює</div>
+                            <div class="option-desc">Розслабляє та знімає стрес</div>
+                        </div>
+                        <div class="option" data-type="effect" data-value="focus">
+                            <span class="tea-icon">🎯</span>
+                            <div class="option-title">Фокусує</div>
+                            <div class="option-desc">Покращує концентрацію уваги</div>
+                        </div>
+                        <div class="option" data-type="effect" data-value="balance">
+                            <span class="tea-icon">⚖️</span>
+                            <div class="option-title">Гармонізує</div>
+                            <div class="option-desc">Приводить в рівновагу тіло і розум</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h2 class="step-title">📦 Оберіть об'єм замовлення</h2>
+                    <div class="options-grid">
+                        <div class="option" data-type="volume" data-value="small">
+                            <span class="tea-icon">🍵</span>
+                            <div class="option-title">Компактний</div>
+                            <div class="option-desc">Для 2 осіб, 10 чаювань на місяць</div>
+                        </div>
+                        <div class="option" data-type="volume" data-value="large">
+                            <span class="tea-icon">🫖</span>
+                            <div class="option-title">Розширений</div>
+                            <div class="option-desc">Для 2 осіб, 30 чаювань на місяць</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="summary" id="summary" style="display: none;">
+                        <h3>📋 Ваш вибір:</h3>
+                        <div class="summary-text" id="summaryText"></div>
+                    </div>
+
+                    <div class="contact-form">
+                        <h2 class="step-title">📬 Залишіть ваші контакти</h2>
+                        <div class="form-group">
+                            <label for="name">Ім'я *</label>
+                            <input type="text" id="name" name="name" required placeholder="Ваше ім'я">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Телефон *</label>
+                            <input type="tel" id="phone" name="phone" required placeholder="+380 XX XXX XX XX">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" placeholder="your@email.com (необов'язково)">
+                        </div>
+                        <div class="form-group">
+                            <label for="city">Місто</label>
+                            <select id="city" name="city">
+                                <option value="">Оберіть місто</option>
+                                <option value="kyiv">Київ</option>
+                                <option value="lviv">Львів</option>
+                                <option value="odesa">Одеса</option>
+                                <option value="kharkiv">Харків</option>
+                                <option value="dnipro">Дніпро</option>
+                                <option value="other">Інше</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="submit-btn pulse">
+                            Розпочати чайну подорож
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let selections = {
+            tea: null,
+            effect: null,
+            volume: null
+        };
+
+        const teaNames = {
+            oolong: 'Улун',
+            puer: 'Пуер',
+            red: 'Червоний',
+            white: 'Білий',
+            green: 'Зелений',
+            yellow: 'Жовтий'
+        };
+
+        const effectNames = {
+            energize: 'Бадьорить',
+            calm: 'Заспокоює',
+            focus: 'Фокусує',
+            balance: 'Гармонізує'
+        };
+
+        const volumeNames = {
+            small: 'Компактний (10 чаювань)',
+            large: 'Розширений (30 чаювань)'
+        };
+
+        // Handle option selection
+        document.querySelectorAll('.option').forEach(option => {
+            option.addEventListener('click', function() {
+                const type = this.dataset.type;
+                const value = this.dataset.value;
+
+                // Remove selection from other options of the same type
+                document.querySelectorAll(`[data-type="${type}"]`).forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+
+                // Add selection to clicked option
+                this.classList.add('selected');
+                selections[type] = value;
+
+                updateSummary();
+            });
+        });
+
+        function updateSummary() {
+            const summary = document.getElementById('summary');
+            const summaryText = document.getElementById('summaryText');
+
+            if (selections.tea || selections.effect || selections.volume) {
+                let text = '';
+                if (selections.tea) text += `Тип чаю: ${teaNames[selections.tea]}<br>`;
+                if (selections.effect) text += `Ефект: ${effectNames[selections.effect]}<br>`;
+                if (selections.volume) text += `Об'єм: ${volumeNames[selections.volume]}`;
+
+                summaryText.innerHTML = text;
+                summary.style.display = 'block';
+                summary.style.animation = 'slideUp 0.5s ease forwards';
+            }
+        }
+
+        // Google Apps Script URL
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxqqVjMxEv36_yynu9h8hnEs2pXieZ06r2lza5bDp7WH5A55TMAszuTvfuheh4Jf82F/exec';
+
+        // Handle form submission
+        document.getElementById('teaForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const name = formData.get('name');
+            const email = formData.get('email');
+            const phone = formData.get('phone');
+            const city = formData.get('city');
+
+            // Validation - тільки ім'я та телефон обов'язкові
+            if (!name || !phone) {
+                alert('Будь ласка, заповніть ім\'я та номер телефону');
+                return;
+            }
+
+            if (!selections.tea || !selections.effect || !selections.volume) {
+                alert('Будь ласка, зробіть вибір у всіх категоріях');
+                return;
+            }
+
+            // Prepare data for Google Sheets
+            const submitBtn = document.querySelector('.submit-btn');
+            submitBtn.innerHTML = 'Надсилаємо...';
+            submitBtn.disabled = true;
+
+            const dataToSend = {
+                name: name,
+                phone: phone,
+                email: email || '',
+                city: city || '',
+                tea: teaNames[selections.tea],
+                effect: effectNames[selections.effect],
+                volume: volumeNames[selections.volume]
+            };
+
+            try {
+                // Send to Google Sheets
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(dataToSend)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Success
+                    submitBtn.innerHTML = '✅ Відправлено!';
+                    submitBtn.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+                    
+                    setTimeout(() => {
+                        alert(`Дякуємо, ${name}! Ваша заявка успішно збережена в нашій системі. Ми зв'яжемося з вами найближчим часом для обговорення деталей підписки.`);
+                        
+                        // Reset form
+                        this.reset();
+                        document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+                        document.getElementById('summary').style.display = 'none';
+                        selections = { tea: null, effect: null, volume: null };
+                        
+                        submitBtn.innerHTML = 'Розпочати чайну подорож';
+                        submitBtn.style.background = 'linear-gradient(135deg, #d4af37 0%, #b8860b 100%)';
+                        submitBtn.disabled = false;
+                    }, 1500);
+                } else {
+                    throw new Error(result.error || 'Помилка відправки');
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                
+                // Fallback - зберегти локально і показати інструкцію
+                const fallbackData = JSON.stringify(dataToSend, null, 2);
+                
+                submitBtn.innerHTML = '❌ Помилка';
+                submitBtn.style.background = 'linear-gradient(135deg, #dc3545 0%, #c82333 100%)';
+                
+                setTimeout(() => {
+                    alert(`Виникла технічна помилка. Будь ласка, зв'яжіться з нами напряму:\n\nТелефон: +380 XX XXX XX XX\nEmail: info@teajourney.com\n\nАбо надішліть ці дані:\n${fallbackData}`);
+                    
+                    submitBtn.innerHTML = 'Розпочати чайну подорож';
+                    submitBtn.style.background = 'linear-gradient(135deg, #d4af37 0%, #b8860b 100%)';
+                    submitBtn.disabled = false;
+                }, 1000);
+            }
+        });
+
+        // Add smooth scrolling and enhanced interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate elements on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.step').forEach(step => {
+                observer.observe(step);
+            });
+        });
+    </script>
+</body>
+</html>

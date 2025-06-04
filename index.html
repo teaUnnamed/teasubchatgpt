@@ -473,6 +473,7 @@
                 selections[type] = value;
 
                 updateSummary();
+                updateHiddenFields();
             });
         });
 
@@ -490,6 +491,12 @@
                 summary.style.display = 'block';
                 summary.style.animation = 'slideUp 0.5s ease forwards';
             }
+        }
+
+        function updateHiddenFields() {
+            document.getElementById('hiddenTea').value = selections.tea || '';
+            document.getElementById('hiddenEffect').value = selections.effect || '';
+            document.getElementById('hiddenVolume').value = selections.volume || '';
         }
 
         // Google Apps Script URL
@@ -556,7 +563,8 @@
                         document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
                         document.getElementById('summary').style.display = 'none';
                         selections = { tea: null, effect: null, volume: null };
-                        
+                        updateHiddenFields();
+
                         submitBtn.innerHTML = 'Розпочати чайну подорож';
                         submitBtn.style.background = 'linear-gradient(135deg, #d4af37 0%, #b8860b 100%)';
                         submitBtn.disabled = false;

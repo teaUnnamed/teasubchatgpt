@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MVP Чайна Підписка</title>
+    <style>
+        body { font-family: Arial, sans-serif; background:#f6f6f6; margin:0; padding:0; }
+        .container { max-width: 600px; margin:20px auto; background:#fff; padding:20px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+        h1 { text-align:center; margin-bottom:20px; }
+        .options { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px; }
+        .option { flex:1; padding:10px; border:1px solid #ccc; border-radius:5px; text-align:center; cursor:pointer; user-select:none; }
+        .option.selected { background:#3a7730; color:#fff; }
+        .form-group { margin-bottom:10px; }
+        .submit-btn { width:100%; padding:10px; background:#3a7730; color:#fff; border:none; border-radius:5px; cursor:pointer; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Обери свій чай</h1>
+    <div class="step" id="step-tea">
+        <h2>1. Тип чаю</h2>
+        <div class="options" data-name="tea">
+            <div class="option">Улун</div>
+            <div class="option">Пуер</div>
+            <div class="option">Червоний</div>
+            <div class="option">Білий</div>
+            <div class="option">Зелений</div>
+            <div class="option">Жовтий</div>
+        </div>
+    </div>
+    <div class="step" id="step-effect">
+        <h2>2. Ефект</h2>
+        <div class="options" data-name="effect">
+            <div class="option">Бадьорить</div>
+            <div class="option">Заспокоює</div>
+            <div class="option">Фокусує</div>
+            <div class="option">Гармонізує</div>
+        </div>
+    </div>
+    <div class="step" id="step-volume">
+        <h2>3. Об'єм</h2>
+        <div class="options" data-name="volume">
+            <div class="option">10 чаїв на місяць (2 особи)</div>
+            <div class="option">30 чаїв на місяць (2 особи)</div>
+        </div>
+    </div>
+    <h2>4. Контакти</h2>
+    <form id="leadForm">
+        <div class="form-group">
+            <label>Ім'я</label>
+            <input type="text" name="name" style="width:100%;" required>
+        </div>
+        <div class="form-group">
+            <label>Телефон</label>
+            <input type="tel" name="phone" style="width:100%;" required>
+        </div>
+        <button class="submit-btn" type="submit">Відправити</button>
+    </form>
+</div>
+<script>
+    const selections = {};
+    document.querySelectorAll('.options').forEach(group => {
+        group.addEventListener('click', e => {
+            if (e.target.classList.contains('option')) {
+                const name = group.dataset.name;
+                group.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+                e.target.classList.add('selected');
+                selections[name] = e.target.innerText;
+            }
+        });
+    });
+
+    document.getElementById('leadForm').addEventListener('submit', e => {
+        e.preventDefault();
+        if (!selections.tea || !selections.effect || !selections.volume) {
+            alert('Будь ласка, зробіть вибір у всіх блоках.');
+            return;
+        }
+        const data = {
+            name: e.target.name.value,
+            phone: e.target.phone.value,
+            tea: selections.tea,
+            effect: selections.effect,
+            volume: selections.volume
+        };
+        console.log(data);
+        alert('Дякуємо! Ми з вами зв\'яжемось.');
+        e.target.reset();
+        document.querySelectorAll('.option.selected').forEach(opt => opt.classList.remove('selected'));
+        for (const key in selections) delete selections[key];
+    });
+</script>
+</body>
+</html>

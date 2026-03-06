@@ -1,610 +1,456 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Чайна Підписка - Автентичний китайський чай щомісяця</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shopify CRO Audit — Active Mode</title>
+  <style>
+    :root {
+      --bg: #f5f5f3;
+      --card: #fff;
+      --text: #101010;
+      --muted: #666;
+      --line: #dfdfdc;
+      --accent: #101010;
+      --ok: #0f766e;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .wrap {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 36px 18px 70px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      letter-spacing: -0.02em;
+    }
+    .lead { margin: 0; color: var(--muted); }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 16px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
 
-        body {
-            font-family: 'Georgia', serif;
-            background: linear-gradient(135deg, #2d4a22 0%, #4a6741 50%, #1f3419 100%);
-            color: #2c3e28;
-            overflow-x: hidden;
-        }
+    label { display: block; font-weight: 600; font-size: 0.92rem; margin-bottom: 6px; }
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid #cfcfcb;
+      border-radius: 10px;
+      background: #fff;
+      padding: 12px;
+      font-size: 0.98rem;
+      margin-bottom: 12px;
+    }
+    textarea { min-height: 84px; resize: vertical; }
+    .checkboxes {
+      border: 1px solid #d8d8d4;
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 12px;
+      display: grid;
+      gap: 7px;
+    }
+    .checkboxes label {
+      margin: 0;
+      font-weight: 500;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .checkboxes input { width: auto; margin: 0; }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+    .btn {
+      border: 0;
+      background: var(--accent);
+      color: #fff;
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn:disabled { opacity: 0.7; cursor: wait; }
 
-        .hero {
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 134, 11, 0.05) 100%);
-            padding: 60px 0;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
+    .loader {
+      display: none;
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fbfbfa;
+      padding: 14px;
+    }
+    .loader.active { display: block; }
+    .progress {
+      margin: 10px 0;
+      height: 8px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #ececea;
+    }
+    .bar {
+      width: 0;
+      height: 100%;
+      background: #111;
+      animation: bar 2.2s linear infinite;
+    }
+    @keyframes bar {
+      0% { width: 0; }
+      60% { width: 80%; }
+      100% { width: 100%; }
+    }
+    .status { margin: 0; color: var(--muted); font-size: 0.92rem; min-height: 25px; }
+    .magic {
+      margin-top: 8px;
+      padding: 8px 10px;
+      border: 1px dashed #d8d8d4;
+      border-radius: 8px;
+      font-family: ui-monospace, Menlo, monospace;
+      font-size: 0.82rem;
+      color: #333;
+      min-height: 38px;
+      background: #fff;
+    }
 
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(212,175,55,0.1)"/><circle cx="80" cy="40" r="1" fill="rgba(184,134,11,0.1)"/><circle cx="40" cy="80" r="1.5" fill="rgba(212,175,55,0.08)"/></svg>') repeat;
-            animation: float 20s linear infinite;
-        }
+    .result { display: none; margin-top: 14px; }
+    .result.active { display: block; }
+    .download {
+      margin-top: 10px;
+      display: inline-block;
+      text-decoration: none;
+      background: var(--ok);
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
 
-        @keyframes float {
-            0% { transform: translateY(0px) rotate(0deg); }
-            100% { transform: translateY(-100px) rotate(360deg); }
-        }
+    .preview {
+      margin-top: 12px;
+      border-top: 1px dashed var(--line);
+      padding-top: 10px;
+    }
+    .preview h3 {
+      font-size: 0.95rem;
+      margin: 0 0 6px;
+    }
+    .preview ul {
+      margin: 0;
+      padding-left: 18px;
+      color: #444;
+      font-size: 0.9rem;
+    }
 
-        .hero-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        h1 {
-            font-size: 3.5rem;
-            font-weight: 300;
-            color: #d4af37;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            letter-spacing: -1px;
-        }
-
-        .subtitle {
-            font-size: 1.3rem;
-            color: rgba(255,255,255,0.9);
-            margin-bottom: 40px;
-            font-weight: 300;
-        }
-
-        .form-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 50px;
-            margin: 40px auto;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-        }
-
-        .step {
-            margin-bottom: 50px;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: slideUp 0.6s ease forwards;
-        }
-
-        .step:nth-child(1) { animation-delay: 0.2s; }
-        .step:nth-child(2) { animation-delay: 0.4s; }
-        .step:nth-child(3) { animation-delay: 0.6s; }
-        .step:nth-child(4) { animation-delay: 0.8s; }
-
-        @keyframes slideUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .step-title {
-            font-size: 1.8rem;
-            color: #2d4a22;
-            margin-bottom: 25px;
-            text-align: center;
-            font-weight: 400;
-        }
-
-        .options-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .option {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border: 2px solid transparent;
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .option::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(212,175,55,0.1), transparent);
-            transition: left 0.5s;
-        }
-
-        .option:hover::before {
-            left: 100%;
-        }
-
-        .option:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.2);
-            border-color: #d4af37;
-        }
-
-        .option.selected {
-            background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
-            color: white;
-            border-color: #d4af37;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
-        }
-
-        .option-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .option-desc {
-            font-size: 0.9rem;
-            opacity: 0.8;
-            line-height: 1.4;
-        }
-
-        .contact-form {
-            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-            border-radius: 15px;
-            padding: 30px;
-            border: 2px solid rgba(212, 175, 55, 0.2);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #2d4a22;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: rgba(255,255,255,0.9);
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #d4af37;
-            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .submit-btn {
-            background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
-            color: white;
-            border: none;
-            padding: 18px 40px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            width: 100%;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .submit-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .submit-btn:hover::before {
-            left: 100%;
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
-        }
-
-        .summary {
-            background: rgba(212, 175, 55, 0.1);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 30px;
-            border-left: 4px solid #d4af37;
-        }
-
-        .summary h3 {
-            color: #2d4a22;
-            margin-bottom: 10px;
-        }
-
-        .summary-text {
-            color: #4a6741;
-            line-height: 1.6;
-        }
-
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2.5rem;
-            }
-            
-            .form-container {
-                padding: 30px 20px;
-                margin: 20px auto;
-            }
-            
-            .options-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .step-title {
-                font-size: 1.5rem;
-            }
-        }
-
-        .tea-icon {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-    </style>
+    .owner {
+      margin-top: 18px;
+      border-top: 1px dashed var(--line);
+      padding-top: 12px;
+    }
+    .owner ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 0.88rem; }
+  </style>
 </head>
 <body>
-    <div class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>🍃 Чайна Подорож</h1>
-                <p class="subtitle">Автентичний китайський чай прямо до вашого дому щомісяця</p>
-            </div>
+  <main class="wrap">
+    <h1>Активний CRO аудит Shopify</h1>
+    <p class="lead">Внось деталі про магазин — і “магія” формує персоналізовані CRO-рекомендації для головної та продукт-сторінки.</p>
+
+    <section class="card">
+      <form id="auditForm">
+        <div class="grid">
+          <div>
+            <label for="domain">Домен (тільки домен)</label>
+            <input id="domain" name="domain" placeholder="brand.myshopify.com" required />
+          </div>
+          <div>
+            <label for="email">Email клієнта</label>
+            <input id="email" name="email" type="email" placeholder="owner@brand.com" required />
+          </div>
         </div>
-    </div>
 
-    <div class="container">
-        <div class="form-container">
-            <form id="teaForm" action="https://script.google.com/macros/s/AKfycbxqqVjMxEv36_yynu9h8hnEs2pXieZ06r2lza5bDp7WH5A55TMAszuTvfuheh4Jf82F/exec" method="POST">
-                <input type="hidden" name="tea" id="hiddenTea">
-                <input type="hidden" name="effect" id="hiddenEffect">
-                <input type="hidden" name="volume" id="hiddenVolume">
-                <div class="step">
-                    <h2 class="step-title">🌿 Оберіть ваш улюблений тип чаю</h2>
-                    <div class="options-grid">
-                        <div class="option" data-type="tea" data-value="oolong">
-                            <span class="tea-icon">🌀</span>
-                            <div class="option-title">Улун</div>
-                            <div class="option-desc">Напівферментований чай з багатим смаком</div>
-                        </div>
-                        <div class="option" data-type="tea" data-value="puer">
-                            <span class="tea-icon">🏔️</span>
-                            <div class="option-title">Пуер</div>
-                            <div class="option-desc">Витриманий чай з глибоким землистим смаком</div>
-                        </div>
-                        <div class="option" data-type="tea" data-value="red">
-                            <span class="tea-icon">🔥</span>
-                            <div class="option-title">Червоний</div>
-                            <div class="option-desc">Повнотілий ферментований чай</div>
-                        </div>
-                        <div class="option" data-type="tea" data-value="white">
-                            <span class="tea-icon">☁️</span>
-                            <div class="option-title">Білий</div>
-                            <div class="option-desc">Ніжний делікатний чай з тонким ароматом</div>
-                        </div>
-                        <div class="option" data-type="tea" data-value="green">
-                            <span class="tea-icon">🌱</span>
-                            <div class="option-title">Зелений</div>
-                            <div class="option-desc">Свіжий неферментований чай</div>
-                        </div>
-                        <div class="option" data-type="tea" data-value="yellow">
-                            <span class="tea-icon">☀️</span>
-                            <div class="option-title">Жовтий</div>
-                            <div class="option-desc">Рідкісний чай з унікальним процесом обробки</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="step">
-                    <h2 class="step-title">✨ Який ефект ви шукаєте?</h2>
-                    <div class="options-grid">
-                        <div class="option" data-type="effect" data-value="energize">
-                            <span class="tea-icon">⚡</span>
-                            <div class="option-title">Бадьорить</div>
-                            <div class="option-desc">Додає енергії та активності</div>
-                        </div>
-                        <div class="option" data-type="effect" data-value="calm">
-                            <span class="tea-icon">🧘</span>
-                            <div class="option-title">Заспокоює</div>
-                            <div class="option-desc">Розслабляє та знімає стрес</div>
-                        </div>
-                        <div class="option" data-type="effect" data-value="focus">
-                            <span class="tea-icon">🎯</span>
-                            <div class="option-title">Фокусує</div>
-                            <div class="option-desc">Покращує концентрацію уваги</div>
-                        </div>
-                        <div class="option" data-type="effect" data-value="balance">
-                            <span class="tea-icon">⚖️</span>
-                            <div class="option-title">Гармонізує</div>
-                            <div class="option-desc">Приводить в рівновагу тіло і розум</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="step">
-                    <h2 class="step-title">📦 Оберіть об'єм замовлення</h2>
-                    <div class="options-grid">
-                        <div class="option" data-type="volume" data-value="small">
-                            <span class="tea-icon">🍵</span>
-                            <div class="option-title">Компактний</div>
-                            <div class="option-desc">Для 2 осіб, 10 чаювань на місяць</div>
-                        </div>
-                        <div class="option" data-type="volume" data-value="large">
-                            <span class="tea-icon">🫖</span>
-                            <div class="option-title">Розширений</div>
-                            <div class="option-desc">Для 2 осіб, 30 чаювань на місяць</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="step">
-                    <div class="summary" id="summary" style="display: none;">
-                        <h3>📋 Ваш вибір:</h3>
-                        <div class="summary-text" id="summaryText"></div>
-                    </div>
-
-                    <div class="contact-form">
-                        <h2 class="step-title">📬 Залишіть ваші контакти</h2>
-                        <div class="form-group">
-                            <label for="name">Ім'я *</label>
-                            <input type="text" id="name" name="name" required placeholder="Ваше ім'я">
-                        </div>
-                        <div class="form-group">
-                            <label for="phone">Телефон *</label>
-                            <input type="tel" id="phone" name="phone" required placeholder="+380 XX XXX XX XX">
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" name="email" placeholder="your@email.com (необов'язково)">
-                        </div>
-                        <div class="form-group">
-                            <label for="city">Місто</label>
-                            <select id="city" name="city">
-                                <option value="">Оберіть місто</option>
-                                <option value="kyiv">Київ</option>
-                                <option value="lviv">Львів</option>
-                                <option value="odesa">Одеса</option>
-                                <option value="kharkiv">Харків</option>
-                                <option value="dnipro">Дніпро</option>
-                                <option value="other">Інше</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="submit-btn pulse">
-                            Розпочати чайну подорож
-                        </button>
-                    </div>
-                </div>
-            </form>
+        <div class="grid">
+          <div>
+            <label for="niche">Ніша</label>
+            <select id="niche" name="niche">
+              <option value="fashion">Fashion</option>
+              <option value="beauty">Beauty</option>
+              <option value="home">Home & Decor</option>
+              <option value="supplements">Supplements</option>
+              <option value="other">Інше</option>
+            </select>
+          </div>
+          <div>
+            <label for="goal">Головна ціль CRO</label>
+            <select id="goal" name="goal">
+              <option value="add_to_cart">Більше додавань у кошик</option>
+              <option value="checkout">Більше чекаутів</option>
+              <option value="aov">Підняти середній чек (AOV)</option>
+              <option value="mobile">Краще на мобайлі</option>
+            </select>
+          </div>
         </div>
-    </div>
 
-    <script>
-        let selections = {
-            tea: null,
-            effect: null,
-            volume: null
-        };
+        <div class="grid">
+          <div>
+            <label for="aov">Середній чек (USD)</label>
+            <input id="aov" name="aov" type="number" min="1" value="50" required />
+          </div>
+          <div>
+            <label for="traffic">Місячний трафік</label>
+            <select id="traffic" name="traffic">
+              <option value="low">до 10k</option>
+              <option value="mid">10k – 50k</option>
+              <option value="high">50k+</option>
+            </select>
+          </div>
+        </div>
 
-        const teaNames = {
-            oolong: 'Улун',
-            puer: 'Пуер',
-            red: 'Червоний',
-            white: 'Білий',
-            green: 'Зелений',
-            yellow: 'Жовтий'
-        };
+        <label>Поточні проблеми (можна кілька)</label>
+        <div class="checkboxes" id="issuesBox">
+          <label><input type="checkbox" value="low_trust" /> Мало довіри / відгуків</label>
+          <label><input type="checkbox" value="weak_cta" /> Слабкі CTA</label>
+          <label><input type="checkbox" value="slow" /> Повільні сторінки</label>
+          <label><input type="checkbox" value="mobile_drop" /> Просадка на мобайлі</label>
+          <label><input type="checkbox" value="pricing_clarity" /> Нечітка цінність/ціна</label>
+        </div>
 
-        const effectNames = {
-            energize: 'Бадьорить',
-            calm: 'Заспокоює',
-            focus: 'Фокусує',
-            balance: 'Гармонізує'
-        };
+        <label for="notes">Додаткові деталі</label>
+        <textarea id="notes" name="notes" placeholder="Наприклад: фокус на Meta Ads трафіку, високий bounce rate на PDP..."></textarea>
 
-        const volumeNames = {
-            small: 'Компактний (10 чаювань)',
-            large: 'Розширений (30 чаювань)'
-        };
+        <button class="btn" id="submitBtn" type="submit">Запустити магію CRO аналізу</button>
+      </form>
 
-        // Handle option selection
-        document.querySelectorAll('.option').forEach(option => {
-            option.addEventListener('click', function() {
-                const type = this.dataset.type;
-                const value = this.dataset.value;
+      <div class="loader" id="loader">
+        <strong>Магія аналізу в роботі…</strong>
+        <div class="progress"><div class="bar"></div></div>
+        <p class="status" id="statusText">Підготовка агентів аналізу…</p>
+        <div class="magic" id="magicLog">boot sequence: waiting…</div>
+      </div>
 
-                // Remove selection from other options of the same type
-                document.querySelectorAll(`[data-type="${type}"]`).forEach(opt => {
-                    opt.classList.remove('selected');
-                });
+      <div class="result" id="result">
+        <strong>Аудит готовий ✅</strong>
+        <p class="status">Завантажте файл з персональними рекомендаціями (2 блоки по 5 пунктів).</p>
+        <a class="download" id="downloadLink" download="cro-audit.txt">Завантажити .txt аудит</a>
 
-                // Add selection to clicked option
-                this.classList.add('selected');
-                selections[type] = value;
+        <div class="preview" id="preview"></div>
+      </div>
 
-                updateSummary();
-            });
-        });
+      <div class="owner">
+        <strong>Ліди для власника сервісу</strong>
+        <ul id="ownerList"></ul>
+      </div>
+    </section>
+  </main>
 
-        function updateSummary() {
-            const summary = document.getElementById('summary');
-            const summaryText = document.getElementById('summaryText');
+  <script>
+    const form = document.getElementById('auditForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const loader = document.getElementById('loader');
+    const result = document.getElementById('result');
+    const statusText = document.getElementById('statusText');
+    const magicLog = document.getElementById('magicLog');
+    const ownerList = document.getElementById('ownerList');
+    const preview = document.getElementById('preview');
+    const downloadLink = document.getElementById('downloadLink');
 
-            if (selections.tea || selections.effect || selections.volume) {
-                let text = '';
-                if (selections.tea) text += `Тип чаю: ${teaNames[selections.tea]}<br>`;
-                if (selections.effect) text += `Ефект: ${effectNames[selections.effect]}<br>`;
-                if (selections.volume) text += `Об'єм: ${volumeNames[selections.volume]}`;
+    const statusSteps = [
+      'Валідація домену…',
+      'Збір сигналів з головної сторінки…',
+      'Збір сигналів зі сторінки продукту…',
+      'Синтез CRO-гіпотез та пріоритезація…'
+    ];
 
-                summaryText.innerHTML = text;
-                summary.style.display = 'block';
-                summary.style.animation = 'slideUp 0.5s ease forwards';
-            }
-        }
+    const issueTips = {
+      low_trust: 'Підняти trust-сигнали біля головних CTA.',
+      weak_cta: 'Посилити контраст і формулювання CTA (value + action).',
+      slow: 'Оптимізувати critical assets і вагу медіа на first screen.',
+      mobile_drop: 'Перебудувати мобільну ієрархію: CTA, sticky add-to-cart, короткі блоки.',
+      pricing_clarity: 'Спростити комунікацію ціни, вигоди та гарантій.'
+    };
 
-        // Google Apps Script URL
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxqqVjMxEv36_yynu9h8hnEs2pXieZ06r2lza5bDp7WH5A55TMAszuTvfuheh4Jf82F/exec';
+    function isValidDomain(value) {
+      const domainPattern = /^(?!https?:\/\/)(?!.*\/)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
+      return domainPattern.test(value.trim());
+    }
 
-        // Handle form submission
-        document.getElementById('teaForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(this);
-            const name = formData.get('name');
-            const email = formData.get('email');
-            const phone = formData.get('phone');
-            const city = formData.get('city');
+    function selectedIssues() {
+      return [...document.querySelectorAll('#issuesBox input:checked')].map(el => el.value);
+    }
 
-            // Validation - тільки ім'я та телефон обов'язкові
-            if (!name || !phone) {
-                alert('Будь ласка, заповніть ім\'я та номер телефону');
-                return;
-            }
+    function score(input) {
+      let s = 64;
+      if (input.traffic === 'high') s += 6;
+      if (input.goal === 'aov') s -= 2;
+      if (input.aov > 120) s -= 4;
+      s -= input.issues.length * 3;
+      return Math.max(35, Math.min(92, s));
+    }
 
-            if (!selections.tea || !selections.effect || !selections.volume) {
-                alert('Будь ласка, зробіть вибір у всіх категоріях');
-                return;
-            }
+    function buildRecommendations(input) {
+      const baseIssueTips = input.issues.length
+        ? input.issues.map(i => issueTips[i]).filter(Boolean)
+        : ['Додати регулярний цикл A/B тестів на ключових екранах.'];
 
-            // Prepare data for Google Sheets
-            const submitBtn = document.querySelector('.submit-btn');
-            submitBtn.innerHTML = 'Надсилаємо...';
-            submitBtn.disabled = true;
+      const home = [
+        `Сформуйте перший екран з чітким УТП для ніші ${input.niche}.`,
+        `Розмістіть головний CTA у visible зоні та дублюйте його після блоку переваг.`,
+        `Додайте social proof: відгуки, рейтинг, UGC у верхній частині сторінки.`,
+        `Оптимізуйте навігацію під ціль: ${input.goalLabel}.`,
+        baseIssueTips[0]
+      ];
 
-            const dataToSend = {
-                name: name,
-                phone: phone,
-                email: email || '',
-                city: city || '',
-                tea: teaNames[selections.tea],
-                effect: effectNames[selections.effect],
-                volume: volumeNames[selections.volume]
-            };
+      const product = [
+        `Підніміть блок ціна + варіанти + Add to cart вище першого фолду.`,
+        `Додайте trust-компоненти біля CTA: гарантія, повернення, безпечна оплата.`,
+        `Для AOV ${input.aov}$ підсильте апсел/бандли та блок "Разом купують".`,
+        `Скоротіть “тертя” у контенті PDP: короткі буліти, FAQ, доставку перед CTA.`,
+        baseIssueTips[1] || 'Додайте індикатори терміновості (залишок/дедлайн акції).'
+      ];
 
-            try {
-                // Send to Google Sheets
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(dataToSend)
-                });
+      return { home, product };
+    }
 
-                const result = await response.json();
+    function buildAuditText(input, recs, homeScore, productScore) {
+      return [
+        `CRO аудит для: ${input.domain}`,
+        `Email клієнта: ${input.email}`,
+        `Ніша: ${input.niche}, Ціль: ${input.goalLabel}, AOV: ${input.aov}$, Трафік: ${input.traffic}`,
+        '',
+        `Оцінка сторінок (модельна):`,
+        `- Головна: ${homeScore}/100`,
+        `- Сторінка продукту: ${productScore}/100`,
+        '',
+        'Блок 1: Головна сторінка (5 рекомендацій)',
+        `1. ${recs.home[0]}`,
+        `2. ${recs.home[1]}`,
+        `3. ${recs.home[2]}`,
+        `4. ${recs.home[3]}`,
+        `5. ${recs.home[4]}`,
+        '',
+        'Блок 2: Сторінка продукту (5 рекомендацій)',
+        `1. ${recs.product[0]}`,
+        `2. ${recs.product[1]}`,
+        `3. ${recs.product[2]}`,
+        `4. ${recs.product[3]}`,
+        `5. ${recs.product[4]}`,
+        '',
+        `Нотатки клієнта: ${input.notes || '—'}`
+      ].join('\n');
+    }
 
-                if (result.success) {
-                    // Success
-                    submitBtn.innerHTML = '✅ Відправлено!';
-                    submitBtn.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
-                    
-                    setTimeout(() => {
-                        alert(`Дякуємо, ${name}! Ваша заявка успішно збережена в нашій системі. Ми зв'яжемося з вами найближчим часом для обговорення деталей підписки.`);
-                        
-                        // Reset form
-                        this.reset();
-                        document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
-                        document.getElementById('summary').style.display = 'none';
-                        selections = { tea: null, effect: null, volume: null };
-                        
-                        submitBtn.innerHTML = 'Розпочати чайну подорож';
-                        submitBtn.style.background = 'linear-gradient(135deg, #d4af37 0%, #b8860b 100%)';
-                        submitBtn.disabled = false;
-                    }, 1500);
-                } else {
-                    throw new Error(result.error || 'Помилка відправки');
-                }
+    function renderPreview(recs, homeScore, productScore) {
+      preview.innerHTML = `
+        <h3>Швидкий прев’ю результату</h3>
+        <ul>
+          <li>Homepage score: <strong>${homeScore}/100</strong></li>
+          <li>Product page score: <strong>${productScore}/100</strong></li>
+          <li>Ключова дія: ${recs.home[1]}</li>
+          <li>Ключова дія PDP: ${recs.product[1]}</li>
+        </ul>
+      `;
+    }
 
-            } catch (error) {
-                console.error('Error:', error);
-                
-                // Fallback - зберегти локально і показати інструкцію
-                const fallbackData = JSON.stringify(dataToSend, null, 2);
-                
-                submitBtn.innerHTML = '❌ Помилка';
-                submitBtn.style.background = 'linear-gradient(135deg, #dc3545 0%, #c82333 100%)';
-                
-                setTimeout(() => {
-                    alert(`Виникла технічна помилка. Будь ласка, зв'яжіться з нами напряму:\n\nТелефон: +380 XX XXX XX XX\nEmail: info@teajourney.com\n\nАбо надішліть ці дані:\n${fallbackData}`);
-                    
-                    submitBtn.innerHTML = 'Розпочати чайну подорож';
-                    submitBtn.style.background = 'linear-gradient(135deg, #d4af37 0%, #b8860b 100%)';
-                    submitBtn.disabled = false;
-                }, 1000);
-            }
-        });
+    function saveLead(data) {
+      const key = 'croLeads';
+      const leads = JSON.parse(localStorage.getItem(key) || '[]');
+      leads.unshift({
+        domain: data.domain,
+        email: data.email,
+        goal: data.goalLabel,
+        createdAt: new Date().toISOString()
+      });
+      localStorage.setItem(key, JSON.stringify(leads.slice(0, 12)));
+      renderOwnerLeads();
+    }
 
-        // Add smooth scrolling and enhanced interactions
-        document.addEventListener('DOMContentLoaded', function() {
-            // Animate elements on scroll
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
+    function renderOwnerLeads() {
+      const leads = JSON.parse(localStorage.getItem('croLeads') || '[]');
+      if (!leads.length) {
+        ownerList.innerHTML = '<li>Ще немає заявок.</li>';
+        return;
+      }
+      ownerList.innerHTML = leads
+        .map((lead) => `<li>${lead.domain} — ${lead.email} — ${lead.goal}</li>`)
+        .join('');
+    }
 
-            const observer = new IntersectionObserver(function(entries) {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, observerOptions);
+    async function runMagic() {
+      const logs = [
+        'agent.home: extracting hero, CTA, trust...',
+        'agent.pdp: extracting price, atc, urgency...',
+        'agent.mobile: checking thumb-zone interactions...',
+        'agent.prioritizer: ranking quick wins...'
+      ];
+      for (let i = 0; i < statusSteps.length; i += 1) {
+        statusText.textContent = statusSteps[i];
+        magicLog.textContent = logs[i];
+        await new Promise((resolve) => setTimeout(resolve, 850));
+      }
+    }
 
-            document.querySelectorAll('.step').forEach(step => {
-                observer.observe(step);
-            });
-        });
-    </script>
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const domain = form.domain.value.trim();
+      const email = form.email.value.trim();
+
+      if (!isValidDomain(domain)) {
+        alert('Вкажіть лише домен: brand.com або brand.myshopify.com');
+        return;
+      }
+
+      const goalLabel = form.goal.options[form.goal.selectedIndex].text;
+      const input = {
+        domain,
+        email,
+        niche: form.niche.value,
+        goal: form.goal.value,
+        goalLabel,
+        aov: Number(form.aov.value || 50),
+        traffic: form.traffic.value,
+        issues: selectedIssues(),
+        notes: form.notes.value.trim()
+      };
+
+      submitBtn.disabled = true;
+      loader.classList.add('active');
+      result.classList.remove('active');
+
+      await runMagic();
+
+      const homeScore = score(input);
+      const productScore = Math.max(30, Math.min(95, score({ ...input, issues: input.issues.slice(0, Math.max(1, input.issues.length - 1)) }) + 4));
+      const recs = buildRecommendations(input);
+      const report = buildAuditText(input, recs, homeScore, productScore);
+
+      const blob = new Blob([report], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      downloadLink.href = url;
+      downloadLink.download = `cro-audit-${domain.replace(/\./g, '-')}.txt`;
+
+      saveLead(input);
+      renderPreview(recs, homeScore, productScore);
+
+      loader.classList.remove('active');
+      result.classList.add('active');
+      submitBtn.disabled = false;
+    });
+
+    renderOwnerLeads();
+  </script>
 </body>
 </html>

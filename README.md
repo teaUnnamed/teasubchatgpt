@@ -1,25 +1,32 @@
-# Tea Subscription MVP
+# Shopify CRO Audit MVP (Active)
 
-This repository contains two HTML files for a simple tea subscription MVP:
+Мінімалістичний, але **активний** MVP для заявок на CRO-аудит Shopify-магазинів.
 
-- `index.html` – a more detailed landing page
-- `mvp_mockup.html` – a minimal page to collect leads
+## Що тепер можна робити
 
-You can host the site for free using **GitHub Pages**.
+- Ввести тільки домен магазину + email клієнта.
+- Додати деталі для персоналізації аналізу:
+  - ніша
+  - головна ціль CRO
+  - AOV
+  - обсяг трафіку
+  - поточні проблеми
+  - додаткові нотатки
+- Запустити “магію” аналізу з анімованими статусами.
+- Отримати `.txt` аудит з:
+  - Блок 1: головна сторінка (5 рекомендацій)
+  - Блок 2: сторінка продукту (5 рекомендацій)
+- Переглянути owner-ліди (domain + email + goal), збережені у `localStorage`.
 
-## Deploying to GitHub Pages
+## Файли
 
-1. Create a new repository on [GitHub](https://github.com) and push the contents of this folder to it.
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit"
-   git branch -M main
-   git remote add origin https://github.com/<your-user>/<your-repo>.git
-   git push -u origin main
-   ```
-2. On GitHub, open your repository, go to **Settings → Pages**.
-3. Under **Branch**, select `main` (or your default branch) and save.
-4. GitHub will provide a link such as `https://<your-user>.github.io/<your-repo>/` where the site will be available in a minute or two.
+- `index.html` — активна CRO audit сторінка
+- `mvp_mockup.html` — старий мокап (референс)
 
-If you place your landing page in `index.html`, it will load automatically. Other pages like `mvp_mockup.html` will be accessible by their filenames (`/mvp_mockup.html`).
+## Локальний запуск
+
+```bash
+python3 -m http.server 4173
+```
+
+Відкрити: `http://localhost:4173`
